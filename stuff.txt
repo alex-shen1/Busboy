@@ -1,0 +1,20 @@
+balz coordinates: 38.033963, -78.517397
+radius 300 appears to work fine
+
+UVA agency id = 347
+
+ROUTE IDS:
+IL = 4013700
+OL = 4013698
+CGS = 4013586
+NL = 4013584
+
+STOP IDs:
+Alderman Rd @ AFC = 4235112
+McCormick @ Lile = 4235220
+
+
+design:
+input location, get list of stops near location
+(HARDER — dynamically figure out best route to destination?)
+get arrival estimate, inputting routes and stops
