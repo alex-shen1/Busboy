@@ -32,7 +32,7 @@ def get_data(locationCoords):
     # PRESET — Monroe Hall
     # querystring = {"callback": "call", "geo_area": "38.034778, -78.506495 | 300", "agencies": "347"}
 
-    querystring = {"callback": "call", "geo_area": "" + locationCoords + " | 300", "agencies": "347"}
+    querystring = {"callback": "call", "geo_area": "" + locationCoords + " | 150", "agencies": "347"}
 
     headers = {
         'x-rapidapi-host': "transloc-api-1-2.p.rapidapi.com",
@@ -74,7 +74,7 @@ def find_common_stops(start, end):
     common_routes = []
 
     for route in start_routes:
-        if route in end_routes:
+        if route in end_routes and route not in common_routes:
             common_routes.append(route)
     return common_routes
 
@@ -89,14 +89,14 @@ def get_routes(stops_data):
                 unique_routes.append(int(route))
     # print(routes_data)
     # print(unique_routes)
-    parse_route_names(unique_routes)
+    return unique_routes
 
 
 def parse_route_names(routes):
     for route in routes:
         if route in routes_dict.keys():
             routes[routes.index(route)] = routes_dict[route]
-    print(routes)
+    #print(routes)
     return routes
 
 
