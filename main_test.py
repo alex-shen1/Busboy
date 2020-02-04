@@ -4,11 +4,14 @@ def main():
     # location = input("location?")
 
     location = "balz-dobie"
+    #balz coordinates: (38.0340393, -78.5173214)
+    #monroe coordinates: (38.034837, -78.5064309)
+
     startroutes = routes_from_location(location)
     endroutes = routes_from_location("monroe hall uva")
 
     print("common routes: " + str(find_common_stops(startroutes, endroutes)))
-    # parse_route_names([4013586, 4013584, 4013594, 4013698, 4013590, 4013700, 4013696])
+    parse_route_names([4013586, 4013584, 4013594, 4013698, 4013590, 4013700, 4013696])
 
 
 def routes_from_location(location):
