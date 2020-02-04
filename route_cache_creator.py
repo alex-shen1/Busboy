@@ -28,8 +28,23 @@ def create_cache():
         for route in routes_data["347"]:  # 347 = UVA's "agency id"
             routes_file.write(route["short_name"] + "=" + route["route_id"] + "\n")
 
+
+def create_dictionary():
+    routes_dict = {}
+    with open("routes.txt", "r") as routes_file:
+        n = 1
+        for line in routes_file:
+            separator = line.index("=")
+            route_name = (line[:separator])
+            id = (line[separator + 1:len(line) - 1])  # need the -1 to remove \n character
+            routes_dict[id] = route_name
+    # print(routes_dict)
+    return routes_dict
+
+
 def main():
     create_cache()
+    create_dictionary()
 
 
 if __name__ == '__main__':

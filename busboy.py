@@ -1,13 +1,7 @@
-import requests
+from route_cache_creator import create_dictionary
 
-routes_dict = {
-    4013700: "IL",
-    4013698: "OL",
-    4013586: "CGS",
-    4013584: "NL"
-}
+routes_dict = create_dictionary()
 
-url = "https://transloc-api-1-2.p.rapidapi.com/stops.json"
 
 testMode = True
 
@@ -20,19 +14,20 @@ def parse_coords(locationString):
 
     if testMode:
         print("TESTMODE ENABLED: coordinates of " + locationString + ":")
-        print((location.latitude, location.longitude))
-        print("")
+        print((location.latitude, location.longitude), end="\n")
 
     return str(location.latitude) + ", " + str(location.longitude)
 
 
 def get_data(locationCoords):
+    import requests
+    url = "https://transloc-api-1-2.p.rapidapi.com/stops.json"
     # PRESET — Balz-Dobie
     # querystring = {"callback": "call", "geo_area": "38.033963, -78.517397 | 300", "agencies": "347"}
     # PRESET — Monroe Hall
     # querystring = {"callback": "call", "geo_area": "38.034778, -78.506495 | 300", "agencies": "347"}
 
-    querystring = {"callback": "call", "geo_area": "" + locationCoords + " | 150", "agencies": "347"}
+    querystring = {"callback": "call", "geo_area": "" + locationCoords + " | 300", "agencies": "347"}
 
     headers = {
         'x-rapidapi-host': "transloc-api-1-2.p.rapidapi.com",
@@ -86,17 +81,22 @@ def get_routes(stops_data):
     for routeSet in routes_data:
         for route in routeSet:
             if route not in unique_routes:
-                unique_routes.append(int(route))
+                unique_routes.append(route)
     # print(routes_data)
     # print(unique_routes)
     return unique_routes
 
 
 def parse_route_names(routes):
+    # print("KEYS")
+    # print(routes_dict.keys(), end="\n")
+
     for route in routes:
         if route in routes_dict.keys():
+            # print("MATCH FOUND")
             routes[routes.index(route)] = routes_dict[route]
-    #print(routes)
+    # print("PARSED ROUTES")
+    # print(routes, end="\n")
     return routes
 
 
