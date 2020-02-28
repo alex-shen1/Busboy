@@ -1,11 +1,13 @@
 from route_cache_creator import create_dictionary
+import requests
+import json
 
 routes_dict = create_dictionary()
 
 
 testMode = True
 
-
+# runs a string through Google API and returns a string holding geo coordinates
 def parse_coords(locationString):
     from geopy.geocoders import GoogleV3
     key = "AIzaSyD-Ho0sPmcPzQiPDvooQGexPxZf5Xj4xI0"
@@ -18,9 +20,8 @@ def parse_coords(locationString):
 
     return str(location.latitude) + ", " + str(location.longitude)
 
-
-def get_data(locationCoords):
-    import requests
+# given a string of coordinates, returns data for all stops within 300 meters
+def get_stops(locationCoords):
     url = "https://transloc-api-1-2.p.rapidapi.com/stops.json"
     # PRESET — Balz-Dobie
     # querystring = {"callback": "call", "geo_area": "38.033963, -78.517397 | 300", "agencies": "347"}
@@ -28,15 +29,12 @@ def get_data(locationCoords):
     # querystring = {"callback": "call", "geo_area": "38.034778, -78.506495 | 300", "agencies": "347"}
 
     querystring = {"callback": "call", "geo_area": "" + locationCoords + " | 300", "agencies": "347"}
-
     headers = {
         'x-rapidapi-host': "transloc-api-1-2.p.rapidapi.com",
         'x-rapidapi-key': "c96a129019msh032ff6b90f063edp12836cjsn86ac9b68c0ab"
     }
-
     response = requests.request("GET", url, headers=headers, params=querystring)
 
-    import json
 
     # honestly this code chunk is horrible but i don't know how to do
     # it better and i'm too lazy to figure out how
@@ -49,7 +47,7 @@ def get_data(locationCoords):
 
 
 # given a dataset, returns a list of all entries with the field
-def load_data(data, field):
+def read_field(data, field):
     # print(response.text)
     # print(response.json())
     field_data = []
@@ -60,44 +58,27 @@ def load_data(data, field):
 
     return field_data
 
+def get_arrivals(stop):
+    url = "https://transloc-api-1-2.p.rapidapi.com/arrival-estimates.json"
 
-# finds routes that are accessible to both locations
-# start and end should both be lists of routes from start/end
-def find_common_stops(start, end):
-    start_routes = parse_route_names(start)
-    end_routes = parse_route_names(end)
-    common_routes = []
+    querystring = {"stops":"4235112","callback":"call","agencies":"347"}
 
-    for route in start_routes:
-        if route in end_routes and route not in common_routes:
-            common_routes.append(route)
-    return common_routes
+    headers = {
+        'x-rapidapi-host': "transloc-api-1-2.p.rapidapi.com",
+        'x-rapidapi-key': "c96a129019msh032ff6b90f063edp12836cjsn86ac9b68c0ab"
+    }
 
-# given a dataset of stops, all the routes that they access
-def get_routes(stops_data):
-    # print(stops_data)
-    routes_data = load_data(stops_data, "routes")  # should be list of lists?
-    unique_routes = []
-    for routeSet in routes_data:
-        for route in routeSet:
-            if route not in unique_routes:
-                unique_routes.append(route)
-    # print(routes_data)
-    # print(unique_routes)
-    return unique_routes
+    response = requests.request("GET", url, headers=headers, params=querystring)
+
+    json_object = response.json()
+    dump = json.dumps(json_object, indent=1)
+    loaded_json = json.loads(dump)
+    data = loaded_json["data"]  # response itself also contains a bunch of other irrelevant stuff that isn't needed
+
+    return data
 
 
-def parse_route_names(routes):
-    # print("KEYS")
-    # print(routes_dict.keys(), end="\n")
 
-    for route in routes:
-        if route in routes_dict.keys():
-            # print("MATCH FOUND")
-            routes[routes.index(route)] = routes_dict[route]
-    # print("PARSED ROUTES")
-    # print(routes, end="\n")
-    return routes
 
 
 

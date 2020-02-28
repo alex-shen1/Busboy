@@ -21,3 +21,5 @@ get arrival estimate, inputting routes and stops
 
 
 consider appending "UVA" to strings that don't find any stops
+
+API uses ISO 8601 format for time
