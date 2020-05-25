@@ -2,12 +2,17 @@ import data_handler as dh
 import routes_handler as rh
 from iso8601 import parse_date
 from datetime import datetime, timezone
+import os
+from dotenv import load_dotenv # don't know exactly where i need this
+
+load_dotenv(os.path.join('.env'))
+TRANSLOC_API_KEY = os.getenv("TRANSLOC_API_KEY")
 
 from push_notifs import *
 
 def main():
     test_arrivals()
-    #test_routes()
+    test_routes()
 def test_arrivals():
     data = dh.get_arrivals("4235112") # Alderman @ AFC
     # print(data)

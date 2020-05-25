@@ -1,3 +1,5 @@
+import os
+
 # this is the same as get_data in busboy but with different parameters on the request
 def get_data():
     import requests
@@ -5,7 +7,7 @@ def get_data():
     querystring = {"callback": "call", "agencies": "347"}
     headers = {
         'x-rapidapi-host': "transloc-api-1-2.p.rapidapi.com",
-        'x-rapidapi-key': "c96a129019msh032ff6b90f063edp12836cjsn86ac9b68c0ab"
+        'x-rapidapi-key': os.getenv("TRANSLOC_API_KEY")
     }
     response = requests.request("GET", url, headers=headers, params=querystring)
 

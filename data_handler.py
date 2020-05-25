@@ -1,6 +1,11 @@
 from route_cache_creator import create_dictionary
 import requests
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join('.env'))
+TRANSLOC_API_KEY = os.getenv("TRANSLOC_API_KEY")
 
 routes_dict = create_dictionary()
 
@@ -31,7 +36,7 @@ def get_stops(locationCoords):
     querystring = {"callback": "call", "geo_area": "" + locationCoords + " | 300", "agencies": "347"}
     headers = {
         'x-rapidapi-host': "transloc-api-1-2.p.rapidapi.com",
-        'x-rapidapi-key': "c96a129019msh032ff6b90f063edp12836cjsn86ac9b68c0ab"
+        'x-rapidapi-key': TRANSLOC_API_KEY
     }
     response = requests.request("GET", url, headers=headers, params=querystring)
 
@@ -65,7 +70,7 @@ def get_arrivals(stop):
 
     headers = {
         'x-rapidapi-host': "transloc-api-1-2.p.rapidapi.com",
-        'x-rapidapi-key': "c96a129019msh032ff6b90f063edp12836cjsn86ac9b68c0ab"
+        'x-rapidapi-key': TRANSLOC_API_KEY
     }
 
     response = requests.request("GET", url, headers=headers, params=querystring)

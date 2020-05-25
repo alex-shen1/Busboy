@@ -94,3 +94,6 @@ fabric.properties
 __pycache__/
 *.py[cod]
 *.pyc
+
+# API Key
+.env
